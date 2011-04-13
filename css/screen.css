@@ -1,0 +1,5 @@
+li.blogpost { list-style: none; }
+
+.post-title { text-decoration: none }
+.sidebar { border-left: 1px solid black; padding: 0 0 1em 1em; }
+.backlink { text-decoration: none; }
