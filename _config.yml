@@ -8,5 +8,4 @@ category_dir: topics
 category_title_prefix:
 exclude: ["Rakefile", "drafts", "README.markdown"]
 destination: public
-url: http://www.joshualindsey.net/blog
 
