@@ -6,7 +6,7 @@ end
 
 desc "Regenerates and commits the site"
 task :regen do
-  puts %x(jekyll && git add public/ && git commit -m "Regenerated for $(date) && get push origin master")
+  puts %x(jekyll && git add public/ && git commit -m "Regenerated for $(date)" && git push origin master")
 end
 
 namespace :post do
