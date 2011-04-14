@@ -4,6 +4,11 @@ task :clean do
   ['log', 'public'].each { |dir| FileUtils.rm_rf dir }
 end
 
+desc "Regenerates and commits the site"
+task :regen do
+  puts %x(jekyll && git add public/ && git commit -m "Regenerated for $(date) && get push origin master")
+end
+
 namespace :post do
   desc "Generates a file for a new post"
   task :new do
