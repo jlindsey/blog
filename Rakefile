@@ -17,12 +17,13 @@ namespace :post do
 
     puts "Post title?"
     title = STDIN.gets.strip
-    
+    safe_title = title.downcase.gsub(' ', '-').gsub(/[^\w-]/, '')
+
     time = Time.now
     time_str = time.strftime "%r"
     date_str = time.strftime "%F"
 
-    file_path = File.join('drafts', "#{date_str}-#{title.downcase.gsub(' ', '-')}.markdown")
+    file_path = File.join('drafts', "#{date_str}-#{safe_title}.markdown")
 
     File.open file_path, 'w' do |f|
       f.puts <<-EOS
