@@ -70,7 +70,7 @@ knife ec2 server create "role[joshualindsey]" -N "joshualindsey.net" -S jlindsey
 Pretty awesome, but a little opaque. Let's break it down.
 
 * The `knife ec2 server create` bit is fairly self-explanatory, I think. Just run `knife` with its series of subcommands. 
-* `"role[joshualindsey"` sets the run-list. In this case, it is just my single role.
+* `"role[joshualindsey]"` sets the run-list. In this case, it is just my single role.
 * `-N "joshualindsey.net"` sets the node name that the Chef Server uses to identify the new node.
 * `-S jlindsey` is my EC2 keypair name.
 * `-f t1.micro` is setting the "flavor" of the instance to a Micro, so that I can host my site for free. Hurray!
