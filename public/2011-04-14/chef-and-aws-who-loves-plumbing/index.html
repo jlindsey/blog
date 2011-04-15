@@ -81,7 +81,7 @@ extensive API. Double thankfully, Opscode has already baked the pertinent EC2 AP
 
 <ul>
 <li>The <code>knife ec2 server create</code> bit is fairly self-explanatory, I think. Just run <code>knife</code> with its series of subcommands.</li>
-<li><code>"role[joshualindsey"</code> sets the run-list. In this case, it is just my single role.</li>
+<li><code>"role[joshualindsey]"</code> sets the run-list. In this case, it is just my single role.</li>
 <li><code>-N "joshualindsey.net"</code> sets the node name that the Chef Server uses to identify the new node.</li>
 <li><code>-S jlindsey</code> is my EC2 keypair name.</li>
 <li><code>-f t1.micro</code> is setting the "flavor" of the instance to a Micro, so that I can host my site for free. Hurray!</li>
