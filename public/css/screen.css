@@ -5,5 +5,5 @@ pre, code, tt { background-color: #EEE; overflow: auto; }
 
 .post-title { text-decoration: none }
 .sidebar { border-left: 1px solid black; padding: 0 0 1em 1em; }
-.backlink { text-decoration: none; }
+.backlink { text-decoration: none; font-size: 20pt; }
 
