@@ -3,8 +3,9 @@ li.blogpost { list-style: none; }
 
 pre, code, tt { background-color: #EEE; overflow: auto; }
 
-.post-title { text-decoration: none }
+.post-title { text-decoration: none; }
+.post-backlink { text-decoration: none; font-size: 14px; }
 .sidebar { border-left: 1px solid black; padding: 0 0 1em 1em; }
 .backlink { text-decoration: none; font-size: 20pt; }
-.sidebar-link { text-decoration: none; font-size: 12pt; }
+.sidebar-link { text-decoration: none; font-size: 11pt; }
 
