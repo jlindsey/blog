@@ -23,9 +23,9 @@ of utilities using Ruby's Rake), and deploy the static files however you want (a
 web server you want.
 
 So why Jekyll? I've gone through a couple blogging engines now. ExpressionEngine and Radiant were too clunky. WordPress was too bloated. I liked the concept of 
-[tumbleblogging](http://www.kottke.org/05/10/tumblelogs), but Tumblr was slow and its uptime was quite often spotty. I also couldn't stop thinking that
-I was jumping through a lot of hoops and incurring a lot of overhead – both temporally and computationally – just to write posts and disseminate them on the internet.
-Plus, I'm a minimalist at heart and what's better than flat text files?
+[tumbleblogging](http://www.kottke.org/05/10/tumblelogs), but Tumblr was slow and its uptime was often spotty when I used it (though it has gotten much better since). 
+I also couldn't stop thinking that I was jumping through a lot of hoops and incurring a lot of overhead – both temporally and computationally – just to write posts 
+and disseminate them on the internet. Plus, I'm a minimalist at heart and what's better than flat text files?
 
 You can view the link in the first paragraph to see the source for this blog on github. There are plenty of other blog posts and tutorials out there for setting up
 Jekyll and migrating existing blog posts from WordPress or whatever engine you're on now so I won't repeat those here.
