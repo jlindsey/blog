@@ -48,7 +48,7 @@ In daemon mode, the client performs a run (attempts to converge the node) on a c
 Then, a "static\_web" role that installs the `apt`, `nginx`, and `git` packages. It also includes the "base" role in its runlist, making this role a kind of "subclassed"
 role.
 
-Finally, a "joshualindsey" role, which includes the "static\_web" role a custom `joshualindsey.net` cookbook that sets up my nginx configs and performs a git checkout.
+Finally, a "joshualindsey" role, which includes the "static\_web" role and a custom `joshualindsey.net` cookbook that sets up my nginx configs and performs a git checkout.
 You can see this cookbook for yourself [here](https://github.com/jlindsey/cookbooks/tree/master/joshualindsey.net). The astute reader will see the benefit of this 
 cookbook when combined with the daemonized `chef-client`. Because the sites are public github repos, all I have to do to update my site is edit it as I normally would,
 commit and push back up and within 30 minutes or less I will have a fresh checkout on the server, automatically. Or, I can simply ssh in and run a `sudo chef-client`
