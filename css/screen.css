@@ -1,4 +1,4 @@
-p, li, ul { text-size: 14px; }
+p, li, ul { font-size: 14px; }
 li.blogpost { list-style: none; }
 
 pre, code, tt { background-color: #EEE; overflow: auto; }
