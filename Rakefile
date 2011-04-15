@@ -4,9 +4,14 @@ task :clean do
   ['log', 'public'].each { |dir| FileUtils.rm_rf dir }
 end
 
-desc "Regenerates and commits the site"
-task :regen do
-  puts %x(jekyll && git add public/ && git commit -m "Regenerated for $(date)" && git push origin master)
+desc "Regenerate, commit, push, run chef"
+task :deploy do
+  puts "Regenerating site"
+  %x(jekyll)
+  puts "Committing files"
+  %x(git add public/ && git commit -m "Regenerated for $(date)" && git push origin master 2>&1)
+  puts "Running chef-client"
+  %x(ssh -i ~/.ssh/jlindsey.pem ubuntu@www.joshualindsey.net "sudo chef-client")
 end
 
 namespace :post do
