@@ -43,5 +43,10 @@ title: #{title}
     end
 
     puts "\nGenerated #{file_path}"
+
+    puts "Open now? [Y/n]"
+    open = STDIN.gets.strip.upcase
+    exec %Q(#{ENV['EDITOR']} #{file_path}) if open == 'Y' or open.empty?
   end
 end
+
