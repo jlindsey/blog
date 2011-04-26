@@ -1,7 +1,7 @@
 ---
 layout: post
 date: 2011-04-26
-time: 03:23:59 PM
+time: 07:36:29 PM
 title: I am using Automator, and so should you.
 tags:
   - automation
