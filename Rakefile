@@ -13,7 +13,7 @@ namespace :site do
     puts "Committing files"
     %x(git add public/ && git commit -m "Regenerated for $(date)" && git push origin master 2>&1)
     puts "Running chef-client"
-    %x(ssh -i ~/.ssh/jlindsey.pem ubuntu@www.joshualindsey.net "sudo chef-client")
+    %x(ssh -i ~/.ssh/jlindsey.pem ubuntu@joshualindsey.net "sudo chef-client")
   end
 end
 
