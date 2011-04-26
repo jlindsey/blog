@@ -9,3 +9,5 @@ pre, code, tt { background-color: #EEE; overflow: auto; }
 .backlink { text-decoration: none; font-size: 20pt; }
 .sidebar-link { text-decoration: none; font-size: 11pt; }
 
+.post-image { display: inline; border: 1px solid black; margin: 3px 5px 3px 5px !important; }
+

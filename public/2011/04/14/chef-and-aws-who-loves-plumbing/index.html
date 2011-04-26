@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chef and AWS, who loves plumbing?</title>
+    <link rel="stylesheet" href="/css/blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/css/blueprint/print.css" type="text/css" media="print"> 
+    <!--[if lt IE 8]>
+      <link rel="stylesheet" href="/css/blueprint/ie.css" type="text/css" media="screen, projection">
+    <![endif]-->
+    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/css/syntax.css" type="text/css" media="screen, projection">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+  </head>
+
+  <body>
+    <div class="container prepend-top">
+      <div class="span-18">
+        <h1><a class="post-title" href="/2011/04/14/chef-and-aws-who-loves-plumbing">Chef and AWS, who loves plumbing?</a></h1>
+<h4>14 Apr 2011 | 08:24:44 PM | Tagged: chef, aws, automation, and jekyll</h4>
+<span class="pull-2"><a href="/" class="post-backlink">&lt;&lt; Back</a></span>
+
+<p>I love plumbing! I just got finished moving <a href="https://github.com/jlindsey/jlindsey.github.com">my personal CV site</a> and <a href="https://github.com/jlindsey/blog">this blog</a>
+from being hosted on <a href="http://pages.github.com/">GitHub Pages</a> and <a href="http://tumblr.com">Tumblr</a>, respectively, onto an AWS Free-Tier Micro instance. Here's how
+I did it.</p>
+
+<h2>Jekyll</h2>
+
+<p>First, let me gush about <a href="https://github.com/mojombo/jekyll">Jekyll</a> for a bit. Jekyll is billed as a "blog-aware static site generator", but it might be more
+succinctly described as an abstracted text-transformation engine. One writes layouts and partials in HTML and Liquid, blog posts in Markdown, then Jekyll
+compiles these into a series of static HTML files. It's really quite beautiful in its simplicity, and allows you to "blog like a programmer". You can write your
+site layout and blog posts in whatever text editor you like (I'm writing this in vim), write whatever deploy methods or utility scripts you want (I have a collection
+of utilities using Ruby's Rake), and deploy the static files however you want (again, with Rake in my case) to wherever you want, and serve the files using whatever
+web server you want.</p>
+
+<p>So why Jekyll? I've gone through a couple blogging engines now. ExpressionEngine and Radiant were too clunky. WordPress was too bloated. I liked the concept of
+<a href="http://www.kottke.org/05/10/tumblelogs">tumbleblogging</a>, but Tumblr was slow and its uptime was often spotty when I used it (though it has gotten much better since).
+I also couldn't stop thinking that I was jumping through a lot of hoops and incurring a lot of overhead – both temporally and computationally – just to write posts
+and disseminate them on the internet. Plus, I'm a minimalist at heart and what's better than flat text files?</p>
+
+<p>You can view the link in the first paragraph to see the source for this blog on github. There are plenty of other blog posts and tutorials out there for setting up
+Jekyll and migrating existing blog posts from WordPress or whatever engine you're on now so I won't repeat those here.</p>
+
+<h2>AWS and Chef</h2>
+
+<p>As it happens, AWS and Chef both have an essentially free usage tier that makes setting up a simple site and blog very economical. Amazon is still running their
+<a href="http://aws.amazon.com/free/">free tier</a> that allows you to run a Micro instance for free for one year (among many other free services offered in the package).
+Opscode has has a <a href="http://opscode.com/platform/">free plan</a> on their Opscode Platform (esentially a hosted Chef Server service) for up to five nodes.</p>
+
+<p>Signing up for both of these is straightforward enough. I already had a personal Opscode Platform account for <a href="http://www.cloudspace.com">Cloudspace</a>, so I just
+created a new Organization for myself. If you're not familiar with Chef, the <a href="http://wiki.opscode.com/display/chef/Quick+Start">quick start</a> over at the Opscode
+Chef wiki is a good place to... start. After setting up my <a href="http://wiki.opscode.com/display/chef/Chef+Repository">Chef repo</a> for this organization, I set about
+uploading the cookbooks I would need and writing roles for my nodes. Though I only have the single Micro now, it's best to be prepared so I abstracted out the
+configuration into three roles.</p>
+
+<p>First, a "base" role. This role's job is to setup <code>chef-client</code> to run as a daemon which the Chef bootstrapping process doesn't do by default (more on that in a minute).
+In daemon mode, the client performs a run (attempts to converge the node) on a configurable interval. I set mine up to run every 30 minutes.</p>
+
+<p>Then, a "static_web" role that installs the <code>apt</code>, <code>nginx</code>, and <code>git</code> packages. It also includes the "base" role in its runlist, making this role a kind of "subclassed"
+role.</p>
+
+<p>Finally, a "joshualindsey" role, which includes the "static_web" role and a custom <code>joshualindsey.net</code> cookbook that sets up my nginx configs and performs a git checkout.
+You can see this cookbook for yourself <a href="https://github.com/jlindsey/cookbooks/tree/master/joshualindsey.net">here</a>. The astute reader will see the benefit of this
+cookbook when combined with the daemonized <code>chef-client</code>. Because the sites are public github repos, all I have to do to update my site is edit it as I normally would,
+commit and push back up and within 30 minutes or less I will have a fresh checkout on the server, automatically. Or, I can simply ssh in and run a <code>sudo chef-client</code>
+myself if I don't want to wait that long.</p>
+
+<h2>Launching</h2>
+
+<p>As an engineer and sysadmin, I can't help but feel like any time spent away from the terminal is time that isn't being spent efficiently enough. Web UIs can be slow
+and buggy; give me an API to work with and I will get the job done before your page is even finished loading. Thankfully, one of the selling points of AWS is its
+extensive API. Double thankfully, Opscode has already baked the pertinent EC2 API calls into the knife command for us (with help from the stellar
+<a href="http://rubygems.org/gems/fog">fog</a>).</p>
+
+<p>So, to launch a new EC2 instance, bootstrap Chef onto it, configure it, and kick off a run to provision all I have to do is run this single command:</p>
+
+<div class="highlight"><pre><code class="bash">knife ec2 server create <span class="s2">&quot;role[joshualindsey]&quot;</span> -N <span class="s2">&quot;joshualindsey.net&quot;</span> -S jlindsey -f t1.micro -i ami-cef405a7 -x ubuntu -G default
+</code></pre>
+</div>
+
+
+<p>Pretty awesome, but a little opaque. Let's break it down.</p>
+
+<ul>
+<li>The <code>knife ec2 server create</code> bit is fairly self-explanatory, I think. Just run <code>knife</code> with its series of subcommands.</li>
+<li><code>"role[joshualindsey]"</code> sets the run-list. In this case, it is just my single role.</li>
+<li><code>-N "joshualindsey.net"</code> sets the node name that the Chef Server uses to identify the new node.</li>
+<li><code>-S jlindsey</code> is my EC2 keypair name.</li>
+<li><code>-f t1.micro</code> is setting the "flavor" of the instance to a Micro, so that I can host my site for free. Hurray!</li>
+<li><code>-i ami-cef405a7</code> is the AMI ID for the instance. Once, in order to really automate Chef on AWS, we had to compile custom AMIs with Chef pre-installed
+and pre-configured, or set to draw configuration from the user-data associated with the instance. Now that knife can launch and bootstrap instances for
+us, however, we can use any AMI we want (I'm using Eric Hammond's wonderful <a href="http://alestic.com/">Alestic Ubuntu AMIs</a>).</li>
+<li><code>-x ubuntu</code> sets up the user the knife command should SSH in as to bootstrap Chef and kick off the initial run.</li>
+<li>And <code>-G default</code> sets the instance's security group.</li>
+</ul>
+
+
+<p>And within minutes, I have a brand-new webserver that is happily serving up pages!</p>
+
+
+<hr>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = 'joshualindsey'; // required: replace example with your forum shortname
+
+  // The following are highly recommended additional parameters. Remove the slashes in front to use.
+  var disqus_identifier = 'Chef and AWS, who loves plumbing?';
+  var disqus_url = 'http://blog.joshualindsey.net/2011/04/14/chef-and-aws-who-loves-plumbing';
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+   dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+   })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      </div>
+
+      <div class="span-5 sidebar last">
+        <h3><a href="http://joshualindsey.net/" class="backlink">Joshua Lindsey</a></h3>
+        <a href="https://github.com/jlindsey" class="quiet sidebar-link">GitHub</a><br class="clear">
+        <a href="https://twitter.com/lesmothian" class="quiet sidebar-link">Twitter</a><br class="clear">
+        <a href="http://www.linkedin.com/pub/josh-lindsey/12/675/33" class="quiet sidebar-link">LinkedIn</a><br class="clear">
+        <a href="http://stackoverflow.com/users/155094/josh-lindsey" class="quiet sidebar-link">StackOverflow</a><br class="clear">
+      </div>
+    </div>
+  </body>
+</html>
