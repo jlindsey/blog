@@ -15,7 +15,7 @@ task :deploy do
 end
 
 namespace :post do
-  desc "Generates a file for a new post"
+  desc "Generates draft for a new post"
   task :new do
     require 'fileutils'
     FileUtils.mkdir 'drafts' unless File.exists? 'drafts'
@@ -24,18 +24,14 @@ namespace :post do
     title = STDIN.gets.strip
     safe_title = title.downcase.gsub(' ', '-').gsub(/[^\w-]/, '')
 
-    time = Time.now
-    time_str = time.strftime "%r"
-    date_str = time.strftime "%F"
-
-    file_path = File.join('drafts', "#{date_str}-#{safe_title}.markdown")
+    file_path = File.join('drafts', "#{safe_title}.markdown")
 
     File.open file_path, 'w' do |f|
       f.puts <<-EOS
 ---
 layout: post
-date: #{date_str}
-time: #{time_str}
+date: %DATE%
+time: %TIME%
 title: #{title}
 ---
 
@@ -47,6 +43,42 @@ title: #{title}
     puts "Open now? [Y/n]"
     open = STDIN.gets.strip.upcase
     exec %Q(#{ENV['EDITOR']} #{file_path}) if open == 'Y' or open.empty?
+  end
+
+  desc "Publishes a draft post"
+  task :publish do
+    require 'fileutils'
+
+    drafts = Dir['drafts/*.markdown']
+
+    puts "Select a draft to publish:"
+    drafts.each_with_index do |draft, i|
+      title = File.read(draft).scan(/^title:\s?(.*)$/).pop.pop
+      puts "#{i + 1}: #{title}"
+    end
+    
+    loop do
+      print "> "
+      $n = STDIN.gets.strip.to_i
+
+      if drafts.at($n-1).nil?
+        puts "Option out of range. Pick again."
+        next
+      end
+
+      break
+    end
+
+    draft = drafts.at($n-1)
+    time_str = Time.now.strftime "%r"
+    date_str = Time.now.strftime "%F"
+
+    File.open("_posts/#{date_str}-#{File.basename(draft)}", 'w') do |f|
+      f.puts File.read(draft).sub!('%DATE%', date_str).sub!('%TIME%', time_str)
+    end
+
+    FileUtils.rm_f draft
+    puts "Published #{draft}"
   end
 end
 

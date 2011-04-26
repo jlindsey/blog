@@ -1,7 +1,7 @@
 ---
 layout: post
-date: 2011-04-24
-time: 01:12:01 PM
+date: %DATE%
+time: %TIME%
 tags:
   - aws
   - ec2pocalypse
