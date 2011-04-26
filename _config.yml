@@ -3,7 +3,7 @@ server: false
 lsi: false
 markdown: rdiscount
 pygments: true
-permalink: /:year-:month-:day/:title
+permalink: /:year/:month/:day/:title
 category_dir: topics
 category_title_prefix:
 exclude: ["Rakefile", "drafts", "README.markdown"]
