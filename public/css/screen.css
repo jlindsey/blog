@@ -1,7 +1,7 @@
 p, li, ul { font-size: 14px; }
 li.blogpost { list-style: none; }
 
-pre, code, tt { background-color: #EEE; overflow: auto; }
+pre, code, tt { overflow: auto; }
 
 .post-title { text-decoration: none; }
 .post-backlink { text-decoration: none; font-size: 14px; }
