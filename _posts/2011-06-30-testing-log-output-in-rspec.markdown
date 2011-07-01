@@ -9,9 +9,9 @@ tags:
   - ruby
 ---
 
-As a DevOps programmer, I often find myself writing small daemons or background processors. It's good practice to
-maintain logs for these sorts of processes for informational and debugging purposes. Since these logs can be
-invaluable in tracking down production errors, it's a good idea to include them in your test suite.
+In Web Ops, I often find myself writing small daemons or background processors. It's good practice to maintain logs
+for these sorts of processes for informational and debugging purposes. Since these logs can be invaluable in
+tracking down production errors, it's a good idea to include them in your test suite.
 
 ## The Problem
 
