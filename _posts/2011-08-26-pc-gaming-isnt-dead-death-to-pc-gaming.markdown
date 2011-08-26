@@ -2,7 +2,7 @@
 layout: post
 date: 2011-08-26
 time: 01:32:42 PM
-title: A Response to the Razer Gaming Laptop
+title: PC Gaming isn't dead! Death to PC Gaming!
 tags: gaming, off-topic
 ---
 
