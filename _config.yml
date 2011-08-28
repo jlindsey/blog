@@ -6,6 +6,6 @@ pygments: true
 permalink: /:year/:month/:day/:title
 category_dir: topics
 category_title_prefix:
-exclude: ["Rakefile", "drafts", "README.markdown"]
+exclude: ["Rakefile", "drafts", "README.markdown", ".rvmrc", "Gemfile", "Gemfile.lock"]
 destination: public
 
